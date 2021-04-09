@@ -1,0 +1,23 @@
+{
+  "name": "komf-node",
+  "version": "1.0.0",
+  "description": "This application provide REST API for exams, reporting, correction in komf project.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ifarazir/komf-node.git"
+  },
+  "author": "Omid Saghatchian",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ifarazir/komf-node/issues"
+  },
+  "homepage": "https://github.com/ifarazir/komf-node#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
+  }
+}
