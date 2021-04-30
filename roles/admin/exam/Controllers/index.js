@@ -42,3 +42,22 @@ exports.editExam = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.getExam = async (req, res, next) => {
+  try {
+    const { id: examId } = req.params;
+
+    const exam = await Exam.findOne({
+      where: { id: examId, is_deleted: false },
+    });
+    if (!exam) errors.notFoundError();
+
+    res.send(
+      new Response({
+        data: { exam },
+      })
+    );
+  } catch (err) {
+    next(err);
+  }
+};
