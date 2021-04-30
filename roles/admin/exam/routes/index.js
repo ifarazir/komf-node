@@ -1,12 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-router.post('/', (req, res) => {
-  try {
-    // TODO: Change structure
-  } catch (err) {
-    next(err);
-  }
-});
+const examController = require('../Controllers');
+const validator = require('../validator');
+
+router.post('/', validator.createExam, examController.createExam);
 
 module.exports = router;
