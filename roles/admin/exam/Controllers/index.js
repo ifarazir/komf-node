@@ -62,6 +62,25 @@ exports.getExam = async (req, res, next) => {
   }
 };
 
+exports.getExams = async (req, res, next) => {
+  try {
+    // TODO: Add pagination, add query string
+    const exams = await Exam.findAll({
+      where: {
+        is_deleted: false,
+      },
+    });
+
+    res.send(
+      new Response({
+        data: { exams },
+      })
+    );
+  } catch (err) {
+    next(err);
+  }
+};
+
 exports.deleteExam = async (req, res, next) => {
   try {
     const { id: examId } = req.params;
