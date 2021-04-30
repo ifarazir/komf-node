@@ -14,4 +14,9 @@ validator.createExam = (req, res, next) => {
   next();
 };
 
+validator.editExam = (req, res, next) => {
+  schemaValidator(ExamSchema, req.body);
+  next();
+};
+
 module.exports = validator;

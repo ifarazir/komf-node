@@ -8,6 +8,11 @@ module.exports = (sequelize, Sequelize) => {
       description: {
         type: Sequelize.STRING,
       },
+      is_deleted: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
     },
     {
       underscored: true,

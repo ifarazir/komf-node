@@ -1,7 +1,10 @@
 const Response = require('../../../../response');
+const ErrorTools = require('../errors');
+
+const errors = new ErrorTools();
 const { Exam } = require('../../../../models');
 
-exports.createExam = async (req, res) => {
+exports.createExam = async (req, res, next) => {
   try {
     const { body: examInput } = req;
     const createdExam = await Exam.create(examInput);
@@ -9,6 +12,30 @@ exports.createExam = async (req, res) => {
       new Response({
         data: { createdExam },
         message: 'Exam created successfully',
+      })
+    );
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.editExam = async (req, res, next) => {
+  try {
+    const { body: examInput } = req;
+    const { id: examId } = req.params;
+
+    const exam = await Exam.findOne({
+      where: { id: examId, is_deleted: false },
+    });
+    if (!exam) errors.notFoundError();
+
+    await Exam.update(examInput, {
+      where: { id: examId, is_deleted: false },
+    });
+
+    res.send(
+      new Response({
+        message: 'Exam updated successfully',
       })
     );
   } catch (err) {
