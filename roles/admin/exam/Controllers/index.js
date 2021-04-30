@@ -61,3 +61,29 @@ exports.getExam = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.deleteExam = async (req, res, next) => {
+  try {
+    const { id: examId } = req.params;
+
+    const exam = await Exam.findOne({
+      where: { id: examId, is_deleted: false },
+    });
+    if (!exam) errors.notFoundError();
+
+    await Exam.update(
+      { is_deleted: true },
+      {
+        where: { id: examId, is_deleted: false },
+      }
+    );
+
+    res.send(
+      new Response({
+        message: 'Exam deleted successfully',
+      })
+    );
+  } catch (err) {
+    next(err);
+  }
+};

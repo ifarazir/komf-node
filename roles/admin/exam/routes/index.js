@@ -5,7 +5,9 @@ const examController = require('../Controllers');
 const validator = require('../validator');
 
 router.post('/', validator.createExam, examController.createExam);
+
 router.put('/:id', validator.editExam, examController.editExam);
 router.get('/:id', examController.getExam);
+router.delete('/:id', examController.deleteExam);
 
 module.exports = router;
