@@ -1,7 +1,7 @@
 const Response = require('../../../../response');
-const ErrorTools = require('../errors');
+const Error = require('../errors');
 
-const errors = new ErrorTools();
+const errors = new Error();
 const { Exam, QuestionGroup } = require('../../../../models');
 
 exports.createExam = async (req, res, next) => {
