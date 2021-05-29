@@ -1,30 +1,75 @@
-module.exports = (sequelize, Sequelize) => {
-  const QuestionQroup = sequelize.define(
-    'question',
-    {
-      question_body_id: {
-        type: Sequelize.INTEGER,
+const mongoose = require('mongoose');
+
+const QuestionSchema = new mongoose.Schema(
+  {
+    examId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'exam',
+      required: true,
+    },
+    questionParentId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'exam',
+    },
+    content: {
+      type: String,
+      maxLength: 10000000000,
+      required: true,
+    },
+    questionNumber: {
+      type: Number,
+      min: 1,
+      max: 100,
+      required: true,
+    },
+    file: {
+      type: String,
+      maxLength: 1000,
+    },
+    section: {
+      type: String,
+      enum: ['speaking', 'writing', 'reading', 'listening'],
+      required: true,
+    },
+    type: {
+      type: String,
+      enum: ['body', 'singleChoice', 'multiChoice', 'ordering'], // TODO: Change it later
+    },
+    part: {
+      type: Number,
+      enum: [1, 2, 3],
+    },
+    options: {
+      A: {
+        type: String,
+        maxLength: 1000,
       },
-      content: {
-        type: Sequelize.STRING(5000),
+      B: {
+        type: String,
+        maxLength: 1000,
       },
-      q_number: {
-        type: Sequelize.INTEGER(10),
+      C: {
+        type: String,
+        maxLength: 1000,
       },
-      type: {
-        type: Sequelize.ENUM('multi', 'single', 'order'),
+      D: {
+        type: String,
+        maxLength: 1000,
       },
-      lists: {
-        type: Sequelize.STRING(5000),
-      },
-      options: {
-        type: Sequelize.STRING(5000),
+      E: {
+        type: String,
+        maxLength: 1000,
       },
     },
-    {
-      underscored: true,
-    }
-  );
+    answer: [
+      {
+        type: String,
+        enum: ['A', 'B', 'C', 'D', 'E'],
+      },
+    ],
+  },
+  { timestamps: true }
+);
 
-  return QuestionQroup;
-};
+const Question = mongoose.model('question', QuestionSchema);
+module.exports = Question;

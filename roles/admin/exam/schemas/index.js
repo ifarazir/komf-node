@@ -1,10 +1,26 @@
 const Joi = require('joi');
 
-const ExamSchema = Joi.object().keys({
-  duration: Joi.number().integer().min(10).max(400).required(),
+const CreateExamSchema = Joi.object().keys({
+  duration: Joi.object().keys({
+    reading: Joi.number().integer().min(10).max(120).required(),
+    listening: Joi.number().integer().min(10).max(120).required(),
+    speaking: Joi.number().integer().min(10).max(120).required(),
+    writing: Joi.number().integer().min(10).max(120).required(),
+  }),
   description: Joi.string().min(10).max(400).required(),
 });
 
+const EditExamSchema = Joi.object().keys({
+  duration: Joi.object().keys({
+    reading: Joi.number().integer().min(10).max(120),
+    listening: Joi.number().integer().min(10).max(120),
+    speaking: Joi.number().integer().min(10).max(120),
+    writing: Joi.number().integer().min(10).max(120),
+  }),
+  description: Joi.string().min(10).max(400),
+});
+
 module.exports = {
-  ExamSchema,
+  CreateExamSchema,
+  EditExamSchema  
 };

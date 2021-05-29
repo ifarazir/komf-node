@@ -1,4 +1,4 @@
-const { CreateExamSchema, EditExamSchema } = require('../schemas');
+const { CreateQuestionSchema } = require('../schemas');
 const ErrorTools = require('../errors');
 const errors = new ErrorTools();
 const validator = {};
@@ -9,13 +9,8 @@ const schemaValidator = (schema, data) => {
   data = resultValidation.value;
 };
 
-validator.createExam = (req, res, next) => {
-  schemaValidator(CreateExamSchema, req.body);
-  next();
-};
-
-validator.editExam = (req, res, next) => {
-  schemaValidator(EditExamSchema, req.body);
+validator.createQuestion = (req, res, next) => {
+  schemaValidator(CreateQuestionSchema, req.body);
   next();
 };
 

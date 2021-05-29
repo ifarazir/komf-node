@@ -1,6 +1,6 @@
 const express = require('express');
 const createError = require('http-errors');
-const morgan = require('morgan');
+// const morgan = require('morgan');
 // const helmet = require('helmet');
 // const xss = require('xss-clean');
 // const rateLimit = require('express-rate-limit');
@@ -8,21 +8,15 @@ const morgan = require('morgan');
 const dotenv = require('dotenv');
 dotenv.config({ path: './config/config.env' });
 
-const db = require('./models');
-db.sequelize.sync();
-// db.sequelize.sync({ force: true }).then(() => {
-//   console.log('Drop and re-sync db.');
-// });
-
 const app = express();
 
 app.use(express.urlencoded({ extended: 'true' })); // parse application/x-www-form-urlencoded
 app.use(express.json()); // parse application/json
 app.use(express.json({ type: 'application/vnd.api+json' }));
 
-if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'));
-}
+// if (process.env.NODE_ENV === 'development') {
+//   app.use(morgan('dev'));
+// }
 
 const roleRoutes = require('./roles');
 
@@ -39,10 +33,7 @@ app.use(async (err, req, res, next) => {
   delete err.error;
   err.time = new Date();
   if (err.status) res.status(err.status).json(err);
-  else
-    res
-      .status(500)
-      .json({ err, msgFa: 'خطایی رخ داده!', msgEn: 'Something went wrong!' });
+  else res.status(500).json({ err, msgEn: 'Something went wrong!' });
   next(err);
 });
 

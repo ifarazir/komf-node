@@ -1,23 +1,47 @@
-module.exports = (sequelize, Sequelize) => {
-  const Exam = sequelize.define(
-    'exam',
-    {
-      duration: {
-        type: Sequelize.INTEGER,
+const mongoose = require('mongoose');
+
+const ExamSchema = new mongoose.Schema(
+  {
+    duration: {
+      reading: {
+        type: Number,
+        min: 10,
+        max: 120,
+        required: true,
       },
-      description: {
-        type: Sequelize.STRING,
+      listening: {
+        type: Number,
+        min: 10,
+        max: 120,
+        required: true,
       },
-      is_deleted: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false,
-        defaultValue: false,
+      speaking: {
+        type: Number,
+        min: 10,
+        max: 120,
+        required: true,
+      },
+      writing: {
+        max: 120,
+        type: Number,
+        min: 10,
+        required: true,
       },
     },
-    {
-      underscored: true,
-    }
-  );
+    description: {
+      type: String,
+      maxLength: 400,
+      minLength: 3,
+      required: true,
+    },
+    isDeleted: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+  },
+  { timestamps: true }
+);
 
-  return Exam;
-};
+const Exam = mongoose.model('exam', ExamSchema);
+module.exports = Exam;
