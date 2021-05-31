@@ -2,16 +2,95 @@ const Joi = require('joi');
 
 const CreateQuestionSchema = Joi.object().keys({
   examId: Joi.string().max(30).required(),
-  questionParentId: Joi.string().max(30), // TODO: Conditional validation
+  questionParentId: Joi.alternatives()
+    .conditional('type', [
+      {
+        is: 'body',
+        then: Joi.valid(null).required(),
+      },
+      {
+        is: 'singleChoice',
+        then: Joi.string().max(30),
+      },
+      {
+        is: 'multiChoice',
+        then: Joi.string().max(30),
+      },
+      {
+        is: 'ordering',
+        then: Joi.string().max(30),
+      },
+    ])
+    .required(),
   content: Joi.string().min(10).max(10000000000).required(),
-  questionNumber: Joi.number().integer().required().min(1).max(100), // TODO: Conditional validation base on body or not
+  questionNumber: Joi.alternatives()
+    .conditional('type', [
+      {
+        is: 'body',
+        then: Joi.valid(null).required(),
+      },
+      {
+        is: 'singleChoice',
+        then: Joi.number().integer().required().min(1).max(50),
+      },
+      {
+        is: 'multiChoice',
+        then: Joi.number().integer().required().min(1).max(50),
+      },
+      {
+        is: 'ordering',
+        then: Joi.number().integer().required().min(1).max(50),
+      },
+    ])
+    .required(),
   file: Joi.string().max(1000), // TODO: Conditional validation base on section and type combination
-  section: Joi.string()
-    .valid('reading', 'listening', 'speaking', 'writing')
+  section: Joi.alternatives()
+    .conditional('type', [
+      {
+        is: 'body',
+        then: Joi.string()
+          .valid('reading', 'listening', 'speaking', 'writing')
+          .required(),
+      },
+      {
+        is: 'singleChoice',
+        then: Joi.valid(null).required(),
+      },
+      {
+        is: 'multiChoice',
+        then: Joi.valid(null).required(),
+      },
+      {
+        is: 'ordering',
+        then: Joi.valid(null).required(),
+      },
+    ])
     .required(),
-  type: Joi.string() // TODO: Avoid using 'singleChoice', 'multiChoice', 'ordering' when section is 'speaking' or 'writing'
-    .valid('body', 'singleChoice', 'multiChoice', 'ordering')
+  type: Joi.alternatives()
+    .conditional('section', [
+      {
+        is: 'reading',
+        then: Joi.string()
+          .valid('body', 'singleChoice', 'multiChoice', 'ordering')
+          .required(),
+      },
+      {
+        is: 'listening',
+        then: Joi.string()
+          .valid('body', 'singleChoice', 'multiChoice', 'ordering')
+          .required(),
+      },
+      {
+        is: 'speaking',
+        then: Joi.string().valid('body').required(),
+      },
+      {
+        is: 'writing',
+        then: Joi.string().valid('body').required(),
+      },
+    ])
     .required(),
+
   part: Joi.alternatives()
     .conditional('type', [
       {
@@ -20,15 +99,15 @@ const CreateQuestionSchema = Joi.object().keys({
       },
       {
         is: 'singleChoice',
-        then: Joi.string().allow(null),
+        then: Joi.valid(null).required(),
       },
       {
         is: 'multiChoice',
-        then: Joi.string().allow(null),
+        then: Joi.valid(null).required(),
       },
       {
         is: 'ordering',
-        then: Joi.string().allow(null),
+        then: Joi.valid(null).required(),
       },
     ])
     .required(),
@@ -71,7 +150,7 @@ const CreateQuestionSchema = Joi.object().keys({
       },
       {
         is: 'body',
-        then: Joi.string().allow(null),
+        then: Joi.valid(null).required(),
       },
     ])
     .required(),
@@ -100,7 +179,7 @@ const CreateQuestionSchema = Joi.object().keys({
       },
       {
         is: 'body',
-        then: Joi.string().allow(null),
+        then: Joi.valid(null).required(),
       },
     ])
     .required(),
