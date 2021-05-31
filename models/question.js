@@ -20,7 +20,6 @@ const QuestionSchema = new mongoose.Schema(
       type: Number,
       min: 1,
       max: 100,
-      required: true,
     },
     file: {
       type: String,
