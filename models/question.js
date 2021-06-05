@@ -27,8 +27,7 @@ const QuestionSchema = new mongoose.Schema(
     },
     section: {
       type: String,
-      enum: ['speaking', 'writing', 'reading', 'listening'],
-      required: true,
+      enum: ['speaking', 'writing', 'reading', 'listening', null],
     },
     type: {
       type: String,
