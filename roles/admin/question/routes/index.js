@@ -9,6 +9,10 @@ router.get('/', validator.getQuestions, questionController.getQuestions);
 
 // router.put('/:id', validator.editExam, questionController.editExam);
 // router.get('/:id', questionController.getExam);
-// router.delete('/:id', questionController.deleteExam);
+router.delete(
+  '/:id',
+  validator.deleteQuestion,
+  questionController.deleteQuestion
+);
 
 module.exports = router;

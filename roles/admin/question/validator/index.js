@@ -19,4 +19,9 @@ validator.getQuestions = (req, res, next) => {
   next();
 };
 
+validator.deleteQuestion = (req, res, next) => {
+  schemaValidator(paramSchemas.mongoObjectIdSchema, req.params);
+  next();
+};
+
 module.exports = validator;

@@ -115,3 +115,22 @@ exports.getQuestions = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.deleteQuestion = async (req, res, next) => {
+  try {
+    const { params } = req;
+    const questionId = params.id;
+
+    const affectRes = await Question.deleteMany({
+      $or: [{ _id: questionId }, { questionParentId: questionId }],
+    });
+
+    res.send(
+      new Response({
+        message: `${affectRes.deletedCount} question(s) deleted successfully`,
+      })
+    );
+  } catch (err) {
+    next(err);
+  }
+};
