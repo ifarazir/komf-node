@@ -51,7 +51,7 @@ exports.getQuestions = async (req, res, next) => {
       {
         $match: {
           questionParentId: null,
-          section: 'reading',
+          section: query.section,
         },
       },
       {

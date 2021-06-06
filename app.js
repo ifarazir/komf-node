@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const createError = require('http-errors');
 // const morgan = require('morgan');
 // const helmet = require('helmet');
@@ -10,6 +11,7 @@ dotenv.config({ path: './config/config.env' });
 
 const app = express();
 
+app.use(cors());
 app.use(express.urlencoded({ extended: 'true' })); // parse application/x-www-form-urlencoded
 app.use(express.json()); // parse application/json
 app.use(express.json({ type: 'application/vnd.api+json' }));
