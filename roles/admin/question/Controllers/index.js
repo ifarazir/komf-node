@@ -19,6 +19,7 @@ exports.createQuestion = async (req, res, next) => {
         questionInput.questionParentId
       );
       if (!existedParent) errors.parentNotExist();
+      if (existedParent.type !== 'body') errors.parentShouldBody();
     }
 
     const createdQuesiton = await Question.create(questionInput);
@@ -108,6 +109,44 @@ exports.getQuestions = async (req, res, next) => {
       new Response({
         data: {
           examQuestions,
+        },
+      })
+    );
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.editQuestion = async (req, res, next) => {
+  try {
+    const { body: questionInput } = req;
+    const { params } = req;
+    const questionId = params.id;
+
+    const existedQuestion = await Question.findById(questionId);
+    if (!existedQuestion) errors.notFoundError();
+
+    if (questionInput.type !== existedQuestion.type) errors.badRequestError();
+
+    if (questionInput.questionParentId) {
+      const existedParent = await Question.findById(
+        questionInput.questionParentId
+      );
+      if (!existedParent) errors.parentNotExist();
+      if (existedParent.type !== 'body') errors.parentShouldBody();
+      if (String(existedParent._id) === String(questionId))
+        errors.badRequestError();
+    }
+
+    Object.assign(existedQuestion, questionInput);
+
+    const updatedQuestion = await existedQuestion.save();
+
+    res.send(
+      new Response({
+        message: `Question edited successfully`,
+        data: {
+          updatedQuestion,
         },
       })
     );

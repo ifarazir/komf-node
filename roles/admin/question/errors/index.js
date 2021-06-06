@@ -14,6 +14,13 @@ class errors extends generalErrors {
       msgEn: 'Parent not found!',
     });
   }
+
+  parentShouldBody() {
+    this.generateError({
+      status: 400,
+      msgEn: 'Parent should be body!',
+    });
+  }
 }
 
 module.exports = errors;

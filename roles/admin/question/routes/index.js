@@ -7,8 +7,8 @@ const validator = require('../validator');
 router.post('/', validator.createQuestion, questionController.createQuestion);
 router.get('/', validator.getQuestions, questionController.getQuestions);
 
-// router.put('/:id', validator.editExam, questionController.editExam);
-// router.get('/:id', questionController.getExam);
+router.put('/:id', validator.editQuestion, questionController.editQuestion);
+
 router.delete(
   '/:id',
   validator.deleteQuestion,

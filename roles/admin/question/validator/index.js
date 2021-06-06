@@ -19,6 +19,12 @@ validator.getQuestions = (req, res, next) => {
   next();
 };
 
+validator.editQuestion = (req, res, next) => {
+  schemaValidator(bodySchemas.editQuestionSchema, req.body);
+  schemaValidator(paramSchemas.mongoObjectIdSchema, req.params);
+  next();
+};
+
 validator.deleteQuestion = (req, res, next) => {
   schemaValidator(paramSchemas.mongoObjectIdSchema, req.params);
   next();
