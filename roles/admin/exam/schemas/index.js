@@ -7,6 +7,7 @@ const CreateExamSchema = Joi.object().keys({
     speaking: Joi.number().integer().min(10).max(120).required(),
     writing: Joi.number().integer().min(10).max(120).required(),
   }),
+  status: Joi.string().valid('draft', 'active', 'close').required(),
   description: Joi.string().min(10).max(400).required(),
 });
 
@@ -22,5 +23,5 @@ const EditExamSchema = Joi.object().keys({
 
 module.exports = {
   CreateExamSchema,
-  EditExamSchema  
+  EditExamSchema,
 };
