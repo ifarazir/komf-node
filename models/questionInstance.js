@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const QuestionInstanceSchema = new mongoose.Schema(
   {
-    examId: {
+    examInstanceId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'exam',
       required: true,

@@ -12,7 +12,7 @@ const ExamInstanceSchema = new mongoose.Schema(
       ref: 'student',
       required: true,
     },
-    state: {
+    section: {
       type: String,
       enum: ['reading', 'listening', 'speaking', 'writing', null],
       required: true,
@@ -26,7 +26,7 @@ const ExamInstanceSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: ['inProgress', 'close'],
-        default: 'inProgress',
+      default: 'inProgress',
     },
   },
   { timestamps: true }

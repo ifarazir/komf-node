@@ -28,6 +28,20 @@ exports.createExamInstance = async (req, res, next) => {
     });
     if (!referenceExam) errors.referenceExamNotFound();
 
+    const currentTimeMS = Date.now();
+    const readingDurationMS = referenceExam.duration.reading * 60 * 1000;
+    const readingDeadLine = new Date(currentTimeMS + readingDurationMS);
+
+    const examInstance = {
+      studentId,
+      examId: referenceExam._id,
+      section: 'reading',
+      status: 'inProgress',
+      submitDeadline: readingDeadLine,
+    };
+
+    const createdExam = await ExamInstance.create(examInstance);
+
     const gettingQuestionPipelines = [
       {
         $match: {
@@ -87,35 +101,38 @@ exports.createExamInstance = async (req, res, next) => {
     const examQuestions = await Question.aggregate(gettingQuestionPipelines);
     examQuestions.forEach(async (bodyQuestion) => {
       const subQuestions = bodyQuestion.subQuestions;
-      delete bodyQuestion.subQuestions;
-      delete bodyQuestion._id;
+      const unnecessaryKeys = [
+        '_id',
+        'createdAt',
+        'updatedAt',
+        '__v',
+        'examId',
+        'subQuestions',
+      ];
+      unnecessaryKeys.forEach((unnecessaryKey) => {
+        delete bodyQuestion[unnecessaryKey];
+      });
+
+      bodyQuestion.examInstanceId = createdExam._id;
 
       const createdBodyInstance = await QuestionInstance.create(bodyQuestion);
 
       subQuestions.forEach(async (subQuestion) => {
-        const unnecessaryKeys = ['_id', 'createdAt', 'updatedAt', '__v'];
+        const unnecessaryKeys = [
+          '_id',
+          'createdAt',
+          'updatedAt',
+          '__v',
+          'examId',
+        ];
         unnecessaryKeys.forEach((unnecessaryKey) => {
           delete subQuestion[unnecessaryKey];
         });
         subQuestion.questionParentId = createdBodyInstance._id;
-
+        subQuestion.examInstanceId = createdExam._id;
         await QuestionInstance.create(subQuestion);
       });
     });
-
-    const currentTimeMS = Date.now();
-    const readingDurationMS = referenceExam.duration.reading * 60 * 1000;
-    const readingDeadLine = new Date(currentTimeMS + readingDurationMS);
-
-    const examInstance = {
-      studentId,
-      examId: referenceExam._id,
-      state: 'reading',
-      status: 'inProgress',
-      submitDeadline: readingDeadLine,
-    };
-
-    await ExamInstance.create(examInstance);
 
     res.send(
       new Response({
