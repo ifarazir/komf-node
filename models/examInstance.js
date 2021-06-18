@@ -2,6 +2,32 @@ const mongoose = require('mongoose');
 
 const ExamInstanceSchema = new mongoose.Schema(
   {
+    duration: {
+      reading: {
+        type: Number,
+        // min: 10,
+        max: 120,
+        required: true,
+      },
+      listening: {
+        type: Number,
+        // min: 10,
+        max: 120,
+        required: true,
+      },
+      speaking: {
+        type: Number,
+        // min: 10,
+        max: 120,
+        required: true,
+      },
+      writing: {
+        max: 120,
+        type: Number,
+        // min: 10,
+        required: true,
+      },
+    },
     examId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'exam',
@@ -17,7 +43,7 @@ const ExamInstanceSchema = new mongoose.Schema(
       enum: ['reading', 'listening', 'speaking', 'writing', null],
       required: true,
     },
-    closedAt: {
+    finishedAt: {
       type: Date,
     },
     submitDeadline: {
@@ -25,7 +51,7 @@ const ExamInstanceSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['inProgress', 'close'],
+      enum: ['inProgress', 'finished'],
       default: 'inProgress',
     },
   },

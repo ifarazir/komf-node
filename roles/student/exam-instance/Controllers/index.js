@@ -1,5 +1,6 @@
 const Response = require('../../../../response');
 const ErrorTools = require('../errors');
+const agenda = require('../../../../jobs');
 
 const errors = new ErrorTools();
 const {
@@ -38,6 +39,7 @@ exports.createExamInstance = async (req, res, next) => {
       section: 'reading',
       status: 'inProgress',
       submitDeadline: readingDeadLine,
+      duration: referenceExam.duration,
     };
 
     const createdExam = await ExamInstance.create(examInstance);
@@ -96,6 +98,11 @@ exports.createExamInstance = async (req, res, next) => {
         },
       },
     ];
+
+    agenda.schedule(readingDeadLine, 'handle-exam-timeout', {
+      examInstanceId: createdExam._id,
+      section: createdExam.section,
+    });
 
     // Create question instances
     const examQuestions = await Question.aggregate(gettingQuestionPipelines);
