@@ -34,10 +34,11 @@ exports.submitAnswers = async (req, res, next) => {
         existedActiveExamInstance._id
       );
 
-      answers.forEach(async (answer) => {
+      for (let i = 0; i < answers.length; i++) {
+        const answer = answers[i];
         await Answer.create(answer);
         submittedAnswerCounter += 1;
-      });
+      }
     }
 
     return res.send(

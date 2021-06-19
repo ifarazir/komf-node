@@ -24,7 +24,9 @@ class AnswerValidator {
   }
 
   async validateReadingAnswers(answers, examInstanceId) {
-    answers.forEach(async (answer, index) => {
+    for (let index = 0; index < answers.length; index++) {
+      const answer = answers[index];
+
       const questionInstance = await QuestionInstance.findOne({
         _id: answer.questionInstanceId,
         examInstanceId,
@@ -61,11 +63,12 @@ class AnswerValidator {
           this.giveScoreOrderingAnswer(answer, questionInstance);
           break;
       }
-    });
+    }
   }
 
   async validateListeningAnswers(answers, examInstanceId) {
-    answers.forEach(async (answer, index) => {
+    for (let index = 0; index < answers.length; index++) {
+      const answer = answers[index];
       const questionInstance = await QuestionInstance.findOne({
         _id: answer.questionInstanceId,
         examInstanceId,
@@ -102,11 +105,12 @@ class AnswerValidator {
           this.giveScoreOrderingAnswer(answer, questionInstance);
           break;
       }
-    });
+    }
   }
 
   async validateSpeakingAnswers(answers, examInstanceId) {
-    answers.forEach(async (answer, index) => {
+    for (let index = 0; index < answers.length; index++) {
+      const answer = answers[index];
       const questionInstance = await QuestionInstance.findOne({
         _id: answer.questionInstanceId,
         examInstanceId,
@@ -117,11 +121,12 @@ class AnswerValidator {
         errors.sameQuestionType(index, 'speaking');
 
       this.validateSpeakingAnswer(answer);
-    });
+    }
   }
 
   async validateWritingAnswers(answers, examInstanceId) {
-    answers.forEach(async (answer, index) => {
+    for (let index = 0; index < answers.length; index++) {
+      const answer = answers[index];
       const questionInstance = await QuestionInstance.findOne({
         _id: answer.questionInstanceId,
         examInstanceId,
@@ -132,7 +137,7 @@ class AnswerValidator {
         errors.sameQuestionType(index, 'writing');
 
       this.validateWritingAnswer(answer);
-    });
+    }
   }
 
   validateSingleChoiceAnswer(answer) {
