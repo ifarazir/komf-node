@@ -34,6 +34,11 @@ const ExamSchema = new mongoose.Schema(
       minLength: 3,
       required: true,
     },
+    status: {
+      type: String,
+      enum: ['draft', 'active', 'close'],
+      required: true,
+    },
     isDeleted: {
       type: Boolean,
       required: true,
