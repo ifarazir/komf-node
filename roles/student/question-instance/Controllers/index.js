@@ -26,7 +26,7 @@ exports.getQuestionsOfExamInstance = async (req, res, next) => {
     const gettingQuestionPipelines = [
       {
         $match: {
-          // examInstanceId: existedActiveExamInstance._id,
+          examInstanceId: existedActiveExamInstance._id,
           questionParentId: null,
           section: examSection,
         },
