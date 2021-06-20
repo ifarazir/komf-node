@@ -52,14 +52,14 @@ module.exports = (agenda) => {
         await exam.save();
         break;
       case 'writing':
-        exam.finishedAt = new Date();
-        exam.status = 'finished';
-        exam.section = null;
-        await exam.save();
+        await ExamInstance.findOneAndUpdate(
+          {
+            _id: examInstanceId,
+          },
+          { finishedAt: Date.now(), status: 'finished', section: null }
+        );
+
         break;
     }
-
-    // TODO: Remove it
-    console.log('Exam section changed');
   });
 };

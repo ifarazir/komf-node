@@ -2,6 +2,8 @@ const Response = require('../../../../response');
 const ErrorTools = require('../errors');
 const AnswerValidator = require('../validator/answer');
 
+const agenda = require('../../../../jobs');
+
 const answerValidator = new AnswerValidator();
 
 const errors = new ErrorTools();
@@ -14,8 +16,6 @@ exports.submitAnswers = async (req, res, next) => {
 
     const { body: answerInput } = req;
     const answers = answerInput.answers;
-
-    console.log(answers);
 
     const existedActiveExamInstance = await ExamInstance.findOne({
       studentId,
@@ -39,6 +39,61 @@ exports.submitAnswers = async (req, res, next) => {
         await Answer.create(answer);
         submittedAnswerCounter += 1;
       }
+    }
+
+    const currentTimeMS = Date.now();
+
+    switch (examSection) {
+      case 'reading':
+        const listeningDurationMS =
+          existedActiveExamInstance.duration.listening * 60 * 1000;
+        const listeningDeadLine = new Date(currentTimeMS + listeningDurationMS);
+        agenda.schedule(listeningDeadLine, 'handle-exam-timeout', {
+          examInstanceId: existedActiveExamInstance._id,
+          section: 'listening',
+        });
+        existedActiveExamInstance.section = 'listening';
+        await existedActiveExamInstance.save();
+        break;
+
+      case 'listening':
+        const speakingDurationMS =
+          existedActiveExamInstance.duration.speaking * 60 * 1000;
+        const speakingDeadLine = new Date(currentTimeMS + speakingDurationMS);
+
+        agenda.schedule(speakingDeadLine, 'handle-exam-timeout', {
+          examInstanceId: existedActiveExamInstance._id,
+          section: 'speaking',
+        });
+
+        existedActiveExamInstance.section = 'speaking';
+        await existedActiveExamInstance.save();
+        break;
+
+      case 'speaking':
+        const writingDurationMS =
+          existedActiveExamInstance.duration.writing * 60 * 1000;
+        const writingDeadLine = new Date(currentTimeMS + writingDurationMS);
+        agenda.schedule(writingDeadLine, 'handle-exam-timeout', {
+          examInstanceId: existedActiveExamInstance._id,
+          section: 'writing',
+        });
+
+        existedActiveExamInstance.section = 'writing';
+        await existedActiveExamInstance.save();
+        break;
+
+      case 'writing':
+        existedActiveExamInstance.status = 'finished';
+        existedActiveExamInstance.section = null;
+        existedActiveExamInstance.save();
+        await ExamInstance.findOneAndUpdate(
+          {
+            _id: existedActiveExamInstance._id,
+          },
+          { finishedAt: Date.now(), status: 'finished', section: null }
+        );
+        break;
     }
 
     return res.send(
